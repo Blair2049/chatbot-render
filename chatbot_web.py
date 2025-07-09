@@ -287,7 +287,8 @@ def query_with_best_mode(question, language):
                 # 执行查询
                 response = rag.query(question, param=QueryParam(mode=mode, top_k=10))
                 
-                # 计算token和成本
+                # 由于LightRAG的query方法不直接返回token信息，我们使用估算
+                # 在实际部署中，token信息已经在LLM函数中记录到token_tracker
                 input_tokens = calculate_tokens(question)
                 output_tokens = calculate_tokens(response)
                 cost_info = calculate_cost(input_tokens, output_tokens)
@@ -328,6 +329,16 @@ def query_with_best_mode(question, language):
             cost_stats["total_input_tokens"] += best_result["tokens"]["input"]
             cost_stats["total_output_tokens"] += best_result["tokens"]["output"]
             cost_stats["total_cost"] += best_result["cost"]["total_cost"]
+            
+            # 手动记录token使用情况到token_tracker
+            usage_info = {
+                "prompt_tokens": best_result["tokens"]["input"],
+                "completion_tokens": best_result["tokens"]["output"],
+                "total_tokens": best_result["tokens"]["input"] + best_result["tokens"]["output"],
+                "model": "gpt-4o-mini",  # 默认模型
+                "timestamp": datetime.now().isoformat()
+            }
+            token_tracker.record_usage(usage_info)
             
             # 记录查询历史
             query_record = {
@@ -408,6 +419,16 @@ def chat():
                 cost_stats["total_input_tokens"] += input_tokens
                 cost_stats["total_output_tokens"] += output_tokens
                 cost_stats["total_cost"] += cost_info["total_cost"]
+                
+                # 手动记录token使用情况到token_tracker
+                usage_info = {
+                    "prompt_tokens": input_tokens,
+                    "completion_tokens": output_tokens,
+                    "total_tokens": input_tokens + output_tokens,
+                    "model": "gpt-4o-mini",  # 默认模型
+                    "timestamp": datetime.now().isoformat()
+                }
+                token_tracker.record_usage(usage_info)
                 
                 # 评分
                 score_info = score_response(question, response, mode)
