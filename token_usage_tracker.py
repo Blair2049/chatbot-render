@@ -14,10 +14,16 @@ class TokenUsageTracker:
     
     def __init__(self, storage_file: str = "token_usage.json"):
         self.storage_file = storage_file
+        # 在Render环境中，使用内存存储而不是文件存储
+        self.use_memory_storage = os.getenv('RENDER', False)  # 检测是否在Render环境
         self.usage_data = self._load_usage_data()
     
     def _load_usage_data(self) -> Dict:
         """加载现有的使用数据"""
+        # 在Render环境中使用内存存储
+        if self.use_memory_storage:
+            return self._get_default_structure()
+        
         if os.path.exists(self.storage_file):
             try:
                 with open(self.storage_file, 'r', encoding='utf-8') as f:
@@ -43,6 +49,11 @@ class TokenUsageTracker:
     
     def _save_usage_data(self):
         """保存使用数据到文件"""
+        # 在Render环境中只更新内存数据，不写入文件
+        if self.use_memory_storage:
+            self.usage_data["last_updated"] = datetime.now().isoformat()
+            return
+        
         try:
             self.usage_data["last_updated"] = datetime.now().isoformat()
             with open(self.storage_file, 'w', encoding='utf-8') as f:
