@@ -16,4 +16,5 @@ ollama
 torch
 pydantic
 tenacity
-transformers 
+transformers
+nano-vectordb 
