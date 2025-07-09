@@ -6,11 +6,11 @@ from datetime import datetime
 import numpy as np
 import asyncio
 import tiktoken
+
+# 添加当前目录到Python路径，以便导入本地lightrag模块
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from lightrag import QueryParam
-
-# 添加 LightRAG 路径
-sys.path.append('/Users/blairzhang/Desktop/MyProject/LightRAG-main/LightRAG')
-
 from lightrag import LightRAG
 from lightrag.llm import openai_complete_if_cache, openai_embedding
 from lightrag.utils import EmbeddingFunc
