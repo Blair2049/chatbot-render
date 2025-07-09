@@ -9,4 +9,11 @@ requests
 python-dotenv
 asyncio
 nest-asyncio
-setuptools 
+setuptools
+aioboto3
+aiohttp
+ollama
+torch
+pydantic
+tenacity
+transformers 
