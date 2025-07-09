@@ -27,6 +27,7 @@ from tenacity import (
     retry_if_exception_type,
 )
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from datetime import datetime
 
 from .utils import (
     wrap_embedding_func_with_attrs,
@@ -113,6 +114,25 @@ async def openai_complete_if_cache(
         content = response.choices[0].message.content
         if r"\u" in content:
             content = safe_unicode_decode(content.encode("utf-8"))
+        
+        # 获取usage信息
+        usage_data = None
+        if hasattr(response, 'usage') and response.usage:
+            usage_data = {
+                "prompt_tokens": response.usage.prompt_tokens,
+                "completion_tokens": response.usage.completion_tokens,
+                "total_tokens": response.usage.total_tokens,
+                "model": model,
+                "timestamp": datetime.now().isoformat()
+            }
+        
+        # 如果调用者需要usage信息，返回包含usage的字典
+        if kwargs.get("return_usage", False):
+            return {
+                "content": content,
+                "usage": usage_data
+            }
+        
         return content
 
 

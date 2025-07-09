@@ -14,6 +14,7 @@ from lightrag import QueryParam
 from lightrag import LightRAG
 from lightrag.llm import openai_complete_if_cache, openai_embedding
 from lightrag.utils import EmbeddingFunc
+from token_usage_tracker import token_tracker
 
 app = Flask(__name__)
 
@@ -72,14 +73,23 @@ def initialize_rag():
     async def llm_model_func(
         prompt, system_prompt=None, history_messages=[], keyword_extraction=False, **kwargs
     ) -> str:
-        return await openai_complete_if_cache(
+        result = await openai_complete_if_cache(
             "gpt-4o-mini",
             prompt,
             system_prompt=system_prompt,
             history_messages=history_messages,
             api_key=os.getenv("OPENAI_API_KEY"),
+            return_usage=True,  # 获取usage信息
             **kwargs
         )
+        
+        # 如果返回的是包含usage的字典
+        if isinstance(result, dict) and "usage" in result:
+            # 记录usage数据
+            token_tracker.record_usage(result["usage"])
+            return result["content"]
+        
+        return result
 
     async def embedding_func(texts: list[str]) -> np.ndarray:
         return await openai_embedding(
@@ -458,6 +468,39 @@ def get_stats():
         'query_history': query_history[-10:],  # 最近10条记录
         'total_queries': len(query_history)
     })
+
+@app.route('/token_usage')
+def get_token_usage():
+    """获取token使用情况"""
+    try:
+        # 获取查询参数
+        days = request.args.get('days', 7, type=int)
+        summary_only = request.args.get('summary', 'false').lower() == 'true'
+        
+        # 获取使用情况摘要
+        total_usage = token_tracker.get_total_usage()
+        model_usage = token_tracker.get_model_usage()
+        
+        response_data = {
+            "total": total_usage,
+            "models": model_usage,
+            "last_updated": token_tracker.usage_data["last_updated"]
+        }
+        
+        # 如果不只是摘要，添加每日使用情况
+        if not summary_only:
+            daily_usage = token_tracker.get_daily_usage(days)
+            response_data["recent_daily"] = daily_usage
+        
+        return jsonify({
+            "success": True,
+            "data": response_data
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 @app.route('/test_modes')
 def test_modes():
