@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stakeholder Management Chatbot</title>
     <style>
+        :root {
+            --sidebar-width: 320px;
+            --stats-width: 250px;
+            --stats-height: 120px;
+            --stats-margin: 20px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -22,11 +29,19 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
             background: #3A3A3A;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .container.sidebar-collapsed {
+            margin-left: 0;
+            width: 100%;
         }
 
         .header {
@@ -49,15 +64,10 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 250px;
+            grid-template-columns: 1fr;
             gap: 0;
             min-height: 600px;
             position: relative;
-        }
-
-        /* 当侧边栏收缩时，主内容区域占满全宽 */
-        .container.sidebar-collapsed .main-content {
-            grid-template-columns: 1fr;
         }
 
         .chat-section {
@@ -99,9 +109,10 @@
         }
 
         .bot-message {
-            background: #F8FBFF;
-            border: 1px solid #B8D4E3;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
             color: #2C3E50;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
         }
 
         .input-section {
@@ -540,7 +551,7 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 320px;
+            width: var(--sidebar-width);
             height: 100vh;
             background: #3A3A3A;
             border-right: 1px solid #2C2C2C;
@@ -689,17 +700,7 @@
             transform: translateY(-50%) scale(1.1);
         }
 
-        /* 调整主内容区域 */
-        .container {
-            margin-left: 320px;
-            transition: margin-left 0.3s ease;
-            width: calc(100% - 320px);
-        }
 
-        .container.sidebar-collapsed {
-            margin-left: 0;
-            width: 100%;
-        }
 
         /* 历史记录详情模态框 */
         .history-modal {
@@ -773,12 +774,12 @@
 
         /* 整个答题大块右边上方的统计信息 */
         .main-stats-overlay {
-            position: absolute;
-            top: 10px;
-            right: 0;
+            position: fixed;
+            top: var(--stats-margin);
+            right: var(--stats-margin);
             z-index: 100;
-            width: 250px;
-            height: 120px;
+            width: var(--stats-width);
+            height: var(--stats-height);
         }
 
         .main-stats-overlay .stats-card {
@@ -857,6 +858,7 @@
 
             .container {
                 margin-left: 0;
+                width: 100%;
             }
 
             .sidebar-toggle-fixed {
@@ -868,12 +870,13 @@
                 position: relative;
                 top: auto;
                 right: auto;
-                max-width: 100%;
+                width: 100%;
+                height: auto;
                 margin-bottom: 15px;
             }
 
             .main-stats-overlay .stats-card {
-                background: #34495E;
+                background: #3A3A3A;
                 backdrop-filter: none;
             }
         }
