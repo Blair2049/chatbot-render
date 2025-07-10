@@ -54,17 +54,24 @@ def initialize_rag():
     
     # 从环境变量获取 API Key
     api_key = os.getenv("OPENAI_API_KEY")
+    print(f"🔍 检查环境变量: OPENAI_API_KEY = {'已设置' if api_key else '未设置'}")
+    
     if not api_key:
         # 尝试从.env文件读取（本地开发）
         try:
             from dotenv import load_dotenv
             load_dotenv()
             api_key = os.getenv("OPENAI_API_KEY")
+            print(f"🔍 从.env文件读取: OPENAI_API_KEY = {'已设置' if api_key else '未设置'}")
         except ImportError:
+            print("⚠️  dotenv未安装，跳过.env文件读取")
             pass
         
         if not api_key:
+            print("❌ OPENAI_API_KEY 环境变量未设置")
             raise ValueError("OPENAI_API_KEY environment variable is not set. Please set it in your environment or .env file.")
+    
+    print("✅ OPENAI_API_KEY 已正确设置")
     
     # 初始化 token 编码器
     token_encoder = tiktoken.encoding_for_model("gpt-4o-mini")
@@ -385,14 +392,19 @@ def chat():
         question = data.get('message', '')
         mode = data.get('mode', 'best')  # 默认使用最佳模式
         
+        print(f"收到问题: {question}")
+        print(f"模式: {mode}")
+        
         if not question:
-            return jsonify({'error': '请输入问题'})
+            return jsonify({'success': False, 'error': '请输入问题'})
         
         # 检测语言
         language = detect_language(question)
+        print(f"检测到语言: {language}")
         
         if mode == 'best':
             # 自动选择最佳模式
+            print("使用最佳模式查询...")
             result = query_with_best_mode(question, language)
         else:
             # 使用指定模式
@@ -464,8 +476,10 @@ def chat():
                 rag.llm_model_func = original_llm_func
         
         if 'error' in result:
+            print(f"查询出错: {result['error']}")
             return jsonify({'success': False, 'error': result['error']})
         else:
+            print(f"查询成功，响应长度: {len(result['response'])}")
             return jsonify({
                 'success': True,
                 'response': result['response'],
@@ -475,11 +489,13 @@ def chat():
                 'processing_time': 0,  # 可以后续添加实际处理时间
                 'score': result.get('score', {}),
                 'cost': result.get('cost', {}),
-                'tokens': result.get('tokens', {})
+                'tokens': result.get('tokens', {}),
+                'mode_results': result.get('mode_results', {})
             })
         
     except Exception as e:
-        return jsonify({'error': f'错误：{str(e)}'})
+        print(f"异常: {str(e)}")
+        return jsonify({'success': False, 'error': f'错误：{str(e)}'})
 
 @app.route('/stats')
 def get_stats():
