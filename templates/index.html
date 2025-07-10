@@ -695,7 +695,7 @@
             transition: margin-left 0.3s ease;
         }
 
-        .container.expanded {
+        .container.sidebar-collapsed {
             margin-left: 0;
         }
 
@@ -1449,6 +1449,11 @@
         function showHistoryDetail(timestamp) {
             const item = allHistoryData.find(h => h.timestamp === timestamp);
             if (item) {
+                // 自动隐藏侧边栏
+                if (!sidebarCollapsed) {
+                    toggleSidebar();
+                }
+                
                 const modal = document.getElementById('historyModal');
                 const content = document.getElementById('historyModalContent');
                 
