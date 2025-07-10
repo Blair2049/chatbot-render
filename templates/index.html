@@ -1205,6 +1205,22 @@
                 console.error('Error loading token stats:', error);
             }
         }
+        
+        // 新增：加载token使用历史记录（用于图表显示）
+        async function loadTokenHistory() {
+            try {
+                const response = await fetch('/api/token_usage');
+                const historyData = await response.json();
+                
+                if (Array.isArray(historyData)) {
+                    drawTokenHistoryChart(historyData);
+                } else {
+                    console.error('Invalid token history data format');
+                }
+            } catch (error) {
+                console.error('Error loading token history:', error);
+            }
+        }
 
         function displayTokenStats(data) {
             // Update total usage
@@ -1390,6 +1406,182 @@
                 ctx.fillText(value.toLocaleString(), padding - 5, y + 3);
             }
         }
+        
+        // 新增：绘制token使用历史图表（带tooltip）
+        function drawTokenHistoryChart(historyData) {
+            const canvas = document.getElementById('tokenChart');
+            const ctx = canvas.getContext('2d');
+            
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (!historyData || historyData.length === 0) {
+                // 绘制"无数据"消息
+                ctx.fillStyle = '#666';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('No token usage data', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+            
+            // 过滤有效数据点
+            const dataPoints = historyData.filter(item => item.total_tokens > 0);
+            if (dataPoints.length === 0) {
+                ctx.fillStyle = '#666';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('No usage data', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+            
+            // 找到最大值用于缩放
+            const maxTokens = Math.max(...dataPoints.map(d => d.total_tokens));
+            const padding = 40;
+            const chartWidth = canvas.width - 2 * padding;
+            const chartHeight = canvas.height - 2 * padding;
+            const pointSpacing = chartWidth / (dataPoints.length - 1);
+            
+            // 绘制网格线
+            ctx.strokeStyle = '#34495E';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding + (i * chartHeight / 4);
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+            
+            // 绘制坐标轴
+            ctx.strokeStyle = '#3498DB';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // 绘制折线图
+            ctx.strokeStyle = '#3498DB';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            ctx.beginPath();
+            dataPoints.forEach((item, index) => {
+                const x = padding + index * pointSpacing;
+                const y = canvas.height - padding - (item.total_tokens / maxTokens) * chartHeight;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+            
+            // 绘制数据点和tooltip
+            dataPoints.forEach((item, index) => {
+                const x = padding + index * pointSpacing;
+                const y = canvas.height - padding - (item.total_tokens / maxTokens) * chartHeight;
+                
+                // 绘制数据点
+                ctx.fillStyle = '#3498DB';
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // 添加鼠标悬停事件
+                canvas.addEventListener('mousemove', function(e) {
+                    const rect = canvas.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+                    
+                    // 检查鼠标是否在数据点附近
+                    const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+                    if (distance < 10) {
+                        // 显示tooltip
+                        showTooltip(e, item);
+                    } else {
+                        hideTooltip();
+                    }
+                });
+                
+                // 绘制时间标签
+                const timestamp = new Date(item.timestamp);
+                const timeStr = timestamp.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                ctx.fillStyle = '#BDC3C7';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(timeStr, x, canvas.height - padding + 15);
+            });
+            
+            // 绘制Y轴标签
+            ctx.fillStyle = '#BDC3C7';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const y = padding + (i * chartHeight / 4);
+                const value = Math.round((maxTokens * (4 - i)) / 4);
+                ctx.fillText(value.toLocaleString(), padding - 5, y + 3);
+            }
+        }
+        
+        // Tooltip功能
+        function showTooltip(event, data) {
+            // 移除现有tooltip
+            hideTooltip();
+            
+            const tooltip = document.createElement('div');
+            tooltip.id = 'chartTooltip';
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(44, 62, 80, 0.95);
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                z-index: 1000;
+                border: 1px solid #3498DB;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                pointer-events: none;
+            `;
+            
+            const timestamp = new Date(data.timestamp);
+            const timeStr = timestamp.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            tooltip.innerHTML = `
+                <div><strong>Time:</strong> ${timeStr}</div>
+                <div><strong>Input Tokens:</strong> ${data.input_tokens.toLocaleString()}</div>
+                <div><strong>Output Tokens:</strong> ${data.output_tokens.toLocaleString()}</div>
+                <div><strong>Total Tokens:</strong> ${data.total_tokens.toLocaleString()}</div>
+                <div><strong>Cost:</strong> $${data.cost.toFixed(6)}</div>
+            `;
+            
+            document.body.appendChild(tooltip);
+            
+            // 定位tooltip
+            const rect = event.target.getBoundingClientRect();
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY - tooltip.offsetHeight - 10) + 'px';
+        }
+        
+        function hideTooltip() {
+            const tooltip = document.getElementById('chartTooltip');
+            if (tooltip) {
+                tooltip.remove();
+            }
+        }
 
         // 侧边栏状态管理
         let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
@@ -1561,6 +1753,7 @@
         window.onload = function() {
             initializeSidebar();
             updateStats();
+            loadTokenHistory(); // 新增：加载token历史数据
         };
     </script>
 

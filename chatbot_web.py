@@ -28,6 +28,7 @@ cost_stats = {
     "total_cost": 0.0
 }
 query_history = []
+token_usage_history = []  # 新增：token使用历史记录列表
 
 # 成本估算配置
 COST_CONFIG = {
@@ -430,6 +431,16 @@ def chat():
                 }
                 token_tracker.record_usage(usage_info)
                 
+                # 记录到token_usage_history列表（用于前端图表显示）
+                token_history_record = {
+                    "timestamp": datetime.now().isoformat(),
+                    "input_tokens": input_tokens,
+                    "output_tokens": output_tokens,
+                    "total_tokens": input_tokens + output_tokens,
+                    "cost": cost_info["total_cost"]
+                }
+                token_usage_history.append(token_history_record)
+                
                 # 评分
                 score_info = score_response(question, response, mode)
                 
@@ -513,9 +524,11 @@ def get_token_usage():
             daily_usage = token_tracker.get_daily_usage(days)
             response_data["recent_daily"] = daily_usage
         
+        # 返回token_usage_history列表（用于前端图表）
         return jsonify({
             "success": True,
-            "data": response_data
+            "data": response_data,
+            "history": token_usage_history  # 新增：返回历史记录列表
         })
     except Exception as e:
         return jsonify({
@@ -547,6 +560,17 @@ def test_modes():
             })
     
     return jsonify({'test_results': results})
+
+@app.route('/api/token_usage')
+def get_token_usage_history():
+    """获取token使用历史记录（用于前端图表）"""
+    try:
+        # 返回token_usage_history列表，格式符合前端图表需求
+        return jsonify(token_usage_history)
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 @app.route('/health')
 def health():
