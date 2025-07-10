@@ -966,6 +966,7 @@
             messageInput.disabled = true;
             sendButton.disabled = true;
             loading.style.display = 'block';
+            loading.textContent = 'Processing your question... (This may take up to 60 seconds on first request)';
             responseInfo.innerHTML = '';
 
             // Add user message
@@ -973,6 +974,11 @@
 
             try {
                 const mode = document.getElementById('mode').value;
+                
+                // 创建AbortController用于超时控制
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 90000); // 90秒超时
+                
                 const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {
@@ -981,9 +987,11 @@
                     body: JSON.stringify({
                         message: message,
                         mode: mode
-                    })
+                    }),
+                    signal: controller.signal
                 });
 
+                clearTimeout(timeoutId);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -995,16 +1003,21 @@
                     // Update statistics immediately
                     await updateStats();
                 } else {
-                    addMessage('Sorry, I encountered an error while processing your question. Please try again.', 'error');
+                    addMessage(`Error: ${data.error || 'Unknown error occurred'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('Sorry, I encountered an error while processing your question. Please try again.', 'error');
+                if (error.name === 'AbortError') {
+                    addMessage('Request timed out. The server may be starting up. Please try again in a few moments.', 'error');
+                } else {
+                    addMessage('Sorry, I encountered an error while processing your question. Please try again.', 'error');
+                }
             } finally {
                 // Re-enable input and button
                 messageInput.disabled = false;
                 sendButton.disabled = false;
                 loading.style.display = 'none';
+                loading.textContent = 'Processing your question...';
                 
                 // Clear input field
                 messageInput.value = '';
