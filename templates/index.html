@@ -1419,7 +1419,7 @@
             }
         }
         
-        // 新增：绘制token使用历史图表（带tooltip）
+        // 新增：绘制token使用历史柱状图（带tooltip）
         function drawTokenHistoryChart(historyData) {
             const canvas = document.getElementById('tokenChart');
             const ctx = canvas.getContext('2d');
@@ -1451,7 +1451,8 @@
             const padding = 40;
             const chartWidth = canvas.width - 2 * padding;
             const chartHeight = canvas.height - 2 * padding;
-            const pointSpacing = chartWidth / (dataPoints.length - 1);
+            const barWidth = Math.min(chartWidth / dataPoints.length * 0.8, 30); // 柱状图宽度
+            const barSpacing = chartWidth / dataPoints.length;
             
             // 绘制网格线
             ctx.strokeStyle = '#34495E';
@@ -1473,35 +1474,15 @@
             ctx.lineTo(canvas.width - padding, canvas.height - padding);
             ctx.stroke();
             
-            // 绘制折线图
-            ctx.strokeStyle = '#3498DB';
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            ctx.beginPath();
+            // 绘制柱状图
             dataPoints.forEach((item, index) => {
-                const x = padding + index * pointSpacing;
-                const y = canvas.height - padding - (item.total_tokens / maxTokens) * chartHeight;
+                const x = padding + index * barSpacing + (barSpacing - barWidth) / 2;
+                const barHeight = (item.total_tokens / maxTokens) * chartHeight;
+                const y = canvas.height - padding - barHeight;
                 
-                if (index === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            });
-            ctx.stroke();
-            
-            // 绘制数据点和tooltip
-            dataPoints.forEach((item, index) => {
-                const x = padding + index * pointSpacing;
-                const y = canvas.height - padding - (item.total_tokens / maxTokens) * chartHeight;
-                
-                // 绘制数据点
+                // 绘制柱子
                 ctx.fillStyle = '#3498DB';
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, 2 * Math.PI);
-                ctx.fill();
+                ctx.fillRect(x, y, barWidth, barHeight);
                 
                 // 添加鼠标悬停事件
                 canvas.addEventListener('mousemove', function(e) {
@@ -1509,15 +1490,20 @@
                     const mouseX = e.clientX - rect.left;
                     const mouseY = e.clientY - rect.top;
                     
-                    // 检查鼠标是否在数据点附近
-                    const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
-                    if (distance < 10) {
-                        // 显示tooltip
+                    // 检查鼠标是否在柱子附近
+                    if (mouseX >= x && mouseX <= x + barWidth && 
+                        mouseY >= y && mouseY <= canvas.height - padding) {
                         showTooltip(e, item);
                     } else {
                         hideTooltip();
                     }
                 });
+                
+                // 绘制数值标签
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.total_tokens.toLocaleString(), x + barWidth/2, y - 5);
                 
                 // 绘制时间标签
                 const timestamp = new Date(item.timestamp);
@@ -1527,20 +1513,10 @@
                 });
                 
                 ctx.fillStyle = '#BDC3C7';
-                ctx.font = '10px Arial';
+                ctx.font = '9px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(timeStr, x, canvas.height - padding + 15);
+                ctx.fillText(timeStr, x + barWidth/2, canvas.height - padding + 15);
             });
-            
-            // 绘制Y轴标签
-            ctx.fillStyle = '#BDC3C7';
-            ctx.font = '10px Arial';
-            ctx.textAlign = 'right';
-            for (let i = 0; i <= 4; i++) {
-                const y = padding + (i * chartHeight / 4);
-                const value = Math.round((maxTokens * (4 - i)) / 4);
-                ctx.fillText(value.toLocaleString(), padding - 5, y + 3);
-            }
         }
         
         // Tooltip功能
@@ -1596,7 +1572,7 @@
         }
 
         // 侧边栏状态管理
-        let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') !== 'false'; // 默认隐藏
         let allHistoryData = []; // 存储所有历史数据
 
         // 侧边栏收缩/展开功能
@@ -1754,17 +1730,17 @@
 
         // 初始化侧边栏状态
         function initializeSidebar() {
-            if (sidebarCollapsed) {
-                const sidebar = document.getElementById('historySidebar');
-                const container = document.querySelector('.container');
-                const toggleFixed = document.getElementById('sidebarToggleFixed');
-                const toggleBtn = document.getElementById('sidebarToggle');
-                
-                sidebar.classList.add('collapsed');
-                container.classList.add('expanded');
-                toggleFixed.style.display = 'block';
-                toggleBtn.querySelector('.toggle-icon').textContent = '▶';
-            }
+            // 默认隐藏侧边栏
+            const sidebar = document.getElementById('historySidebar');
+            const container = document.querySelector('.container');
+            const toggleFixed = document.getElementById('sidebarToggleFixed');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            
+            sidebar.classList.add('collapsed');
+            container.classList.add('expanded');
+            toggleFixed.style.display = 'block';
+            toggleBtn.querySelector('.toggle-icon').textContent = '▶';
+            sidebarCollapsed = true;
         }
 
         // Load initial statistics when page loads
