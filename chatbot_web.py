@@ -601,6 +601,48 @@ def health():
             'timestamp': datetime.now().isoformat()
         }), 500
 
+@app.route('/diagnose')
+def diagnose():
+    """诊断端点，测试各个组件"""
+    try:
+        results = {
+            'timestamp': datetime.now().isoformat(),
+            'rag_initialized': rag is not None,
+            'openai_api_key': bool(os.getenv("OPENAI_API_KEY")),
+            'token_encoder': token_encoder is not None
+        }
+        
+        # 测试OpenAI API连接
+        try:
+            import openai
+            openai.api_key = os.getenv("OPENAI_API_KEY")
+            # 简单的API测试
+            response = openai.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": "Hello"}],
+                max_tokens=10
+            )
+            results['openai_api_test'] = 'success'
+        except Exception as e:
+            results['openai_api_test'] = f'failed: {str(e)}'
+        
+        # 测试文档目录
+        try:
+            import os
+            doc_dir = "./stakeholder_management_rag_sync"
+            results['doc_directory_exists'] = os.path.exists(doc_dir)
+            if os.path.exists(doc_dir):
+                results['doc_files'] = len([f for f in os.listdir(doc_dir) if f.endswith('.json')])
+        except Exception as e:
+            results['doc_directory_test'] = f'failed: {str(e)}'
+        
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
+
 if __name__ == '__main__':
     print("🚀 初始化 Stakeholder Management Chatbot Web 界面...")
     initialize_rag()
