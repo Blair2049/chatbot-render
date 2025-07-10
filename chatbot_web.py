@@ -21,6 +21,8 @@ app = Flask(__name__)
 # 全局变量
 rag = None
 token_encoder = None
+initialization_lock = asyncio.Lock()
+is_initializing = False
 cost_stats = {
     "total_input_tokens": 0,
     "total_output_tokens": 0,
@@ -118,6 +120,30 @@ def initialize_rag():
     )
     
     print("✅ LightRAG 初始化完成")
+
+async def ensure_rag_initialized():
+    """确保RAG已初始化，避免重复初始化"""
+    global rag, is_initializing
+    
+    if rag is not None:
+        return rag
+    
+    async with initialization_lock:
+        if rag is not None:
+            return rag
+        
+        if is_initializing:
+            # 等待其他线程完成初始化
+            while is_initializing:
+                await asyncio.sleep(0.1)
+            return rag
+        
+        is_initializing = True
+        try:
+            initialize_rag()
+            return rag
+        finally:
+            is_initializing = False
 
 def detect_language(text):
     """简单的中英文检测"""
@@ -388,6 +414,13 @@ def chat():
         if not question:
             return jsonify({'error': '请输入问题'})
         
+        # 确保RAG已初始化
+        try:
+            # 使用asyncio.run来运行异步函数
+            rag_instance = asyncio.run(ensure_rag_initialized())
+        except Exception as e:
+            return jsonify({'error': f'系统初始化失败: {str(e)}'})
+        
         # 检测语言
         language = detect_language(question)
         
@@ -550,12 +583,23 @@ def test_modes():
 
 @app.route('/health')
 def health():
-    return jsonify({
-        'status': 'healthy', 
-        'rag_initialized': rag is not None,
-        'total_queries': len(query_history),
-        'total_cost': cost_stats["total_cost"]
-    })
+    """健康检查端点"""
+    try:
+        # 检查RAG是否已初始化
+        rag_status = "initialized" if rag is not None else "not_initialized"
+        
+        return jsonify({
+            'status': 'healthy',
+            'rag_status': rag_status,
+            'initialization_in_progress': is_initializing,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 if __name__ == '__main__':
     print("🚀 初始化 Stakeholder Management Chatbot Web 界面...")
