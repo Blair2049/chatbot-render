@@ -1,0 +1,48 @@
+{
+  "total_usage": {
+    "prompt_tokens": 450,
+    "completion_tokens": 225,
+    "total_tokens": 675,
+    "estimated_cost": 0.00201
+  },
+  "daily_usage": {
+    "2025-07-09": {
+      "prompt_tokens": 100,
+      "completion_tokens": 50,
+      "total_tokens": 150,
+      "estimated_cost": 4.4999999999999996e-05,
+      "requests": 1
+    },
+    "2025-07-08": {
+      "prompt_tokens": 200,
+      "completion_tokens": 100,
+      "total_tokens": 300,
+      "estimated_cost": 8.999999999999999e-05,
+      "requests": 1
+    },
+    "2025-07-07": {
+      "prompt_tokens": 150,
+      "completion_tokens": 75,
+      "total_tokens": 225,
+      "estimated_cost": 0.001875,
+      "requests": 1
+    }
+  },
+  "model_usage": {
+    "gpt-4o-mini": {
+      "prompt_tokens": 300,
+      "completion_tokens": 150,
+      "total_tokens": 450,
+      "estimated_cost": 0.00013499999999999997,
+      "requests": 2
+    },
+    "gpt-4o": {
+      "prompt_tokens": 150,
+      "completion_tokens": 75,
+      "total_tokens": 225,
+      "estimated_cost": 0.001875,
+      "requests": 1
+    }
+  },
+  "last_updated": "2025-07-09T15:52:42.498824"
+}
