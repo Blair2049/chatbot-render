@@ -710,7 +710,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: #23272f;
+            color: #fff;
             border-radius: 10px;
             padding: 30px;
             max-width: 600px;
@@ -741,15 +742,17 @@
         }
 
         .history-detail-question {
-            background: #f8f9fa;
+            background: #2C3E50;
+            color: #fff;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
         }
 
         .history-detail-response {
-            background: white;
-            border: 1px solid #eee;
+            background: #34495E;
+            color: #fff;
+            border: 1px solid #444;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -760,54 +763,62 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             font-size: 0.9em;
-            color: #666;
+            color: #BDC3C7;
         }
 
         /* 整个答题大块右边上方的统计信息 */
         .main-stats-overlay {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
             z-index: 100;
-            max-width: 250px;
+            max-width: 320px;
+            min-width: 280px;
         }
 
         .main-stats-overlay .stats-card {
             background: rgba(44, 62, 80, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 0.85em;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 0.9em;
         }
 
         .main-stats-overlay .stats-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1em;
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
             color: #3498DB;
+            text-align: center;
+            font-weight: 600;
         }
 
         .main-stats-overlay .stat-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
-            font-size: 0.8em;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .main-stats-overlay .stat-item:last-child {
             margin-bottom: 0;
+            border-bottom: none;
         }
 
         .main-stats-overlay .stat-label {
             color: #BDC3C7;
             font-weight: 500;
+            font-size: 0.95em;
         }
 
         .main-stats-overlay .stat-value {
             color: #3498DB;
             font-weight: 600;
+            font-size: 1em;
         }
 
         /* 确保聊天区域有相对定位 */
@@ -1186,6 +1197,7 @@
             // Load token stats if switching to token stats tab
             if (tabName === 'token-stats') {
                 loadTokenStats();
+                loadTokenHistory(); // 修复：切换tab时也加载token历史
             }
         }
 
@@ -1633,7 +1645,14 @@
             if (item) {
                 const modal = document.getElementById('historyModal');
                 const content = document.getElementById('historyModalContent');
-                
+                // 本地时间格式
+                let localTime = '';
+                try {
+                    const d = new Date(item.timestamp);
+                    localTime = d.toLocaleString();
+                } catch (e) {
+                    localTime = item.timestamp;
+                }
                 content.innerHTML = `
                     <div class="history-detail-question">
                         <h4>Question:</h4>
@@ -1644,7 +1663,7 @@
                         <p>${item.response}</p>
                     </div>
                     <div class="history-detail-meta">
-                        <div><strong>Time:</strong> ${item.timestamp}</div>
+                        <div><strong>Time:</strong> ${localTime}</div>
                         <div><strong>Score:</strong> ${item.score.toFixed(1)}/10</div>
                         <div><strong>Cost:</strong> $${item.cost.toFixed(6)}</div>
                         <div><strong>Mode:</strong> ${item.mode || 'unknown'}</div>
@@ -1652,7 +1671,6 @@
                         <div><strong>Tokens:</strong> ${item.input_tokens || 0} input, ${item.output_tokens || 0} output</div>
                     </div>
                 `;
-                
                 modal.style.display = 'block';
             }
         }
