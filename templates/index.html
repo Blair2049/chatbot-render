@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stakeholder Management Chatbot</title>
     <style>
-        :root {
-            --sidebar-width: 320px;
-            --stats-width: 250px;
-            --stats-height: 120px;
-            --stats-margin: 20px;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #2C2C2C;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2C3E50 100%);
             min-height: 100vh;
             padding: 20px;
             color: #FFFFFF;
@@ -29,23 +22,15 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
-            background: #3A3A3A;
+            background: #2C3E50;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .container.sidebar-collapsed {
-            margin-left: 0;
-            width: 100%;
         }
 
         .header {
-            background: #2C2C2C;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2C3E50 100%);
             color: #FFFFFF;
             padding: 30px;
             text-align: center;
@@ -64,7 +49,7 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 250px;
             gap: 0;
             min-height: 600px;
             position: relative;
@@ -74,11 +59,10 @@
             padding: 30px;
             border-right: 1px solid #34495E;
             position: relative;
-            background: #E8F4FD;
         }
 
         .sidebar {
-            background: #3A3A3A;
+            background: #34495E;
             padding: 20px;
             overflow-y: auto;
         }
@@ -86,11 +70,11 @@
         .chat-container {
             height: 400px;
             overflow-y: auto;
-            border: 1px solid #B8D4E3;
+            border: 1px solid #34495E;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
-            background: #FFFFFF;
+            background: #2C3E50;
         }
 
         .message {
@@ -109,10 +93,9 @@
         }
 
         .bot-message {
-            background: #FFFFFF;
-            border: 1px solid #E5E5E5;
-            color: #2C3E50;
-            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+            background: #34495E;
+            border: 1px solid #34495E;
+            color: #FFFFFF;
         }
 
         .input-section {
@@ -124,13 +107,13 @@
         .input-section input {
             flex: 1;
             padding: 12px 16px;
-            border: 2px solid #B8D4E3;
+            border: 2px solid #34495E;
             border-radius: 25px;
             font-size: 16px;
             outline: none;
             transition: border-color 0.3s;
-            background: #FFFFFF;
-            color: #2C3E50;
+            background: #2C3E50;
+            color: #FFFFFF;
         }
 
         .input-section input:focus {
@@ -139,7 +122,7 @@
 
         .input-section button {
             padding: 12px 24px;
-            background: #4A4A4A;
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
             color: #FFFFFF;
             border: none;
             border-radius: 25px;
@@ -174,15 +157,15 @@
 
         .control-group label {
             font-weight: 500;
-            color: #2C3E50;
+            color: #FFFFFF;
         }
 
         .control-group select {
             padding: 8px 12px;
-            border: 1px solid #B8D4E3;
+            border: 1px solid #34495E;
             border-radius: 8px;
-            background: #FFFFFF;
-            color: #2C3E50;
+            background: #2C3E50;
+            color: #FFFFFF;
         }
 
         .stats-card {
@@ -364,7 +347,7 @@
         /* Tab Styles */
         .tab-navigation {
             display: flex;
-            background: #3A3A3A;
+            background: #34495E;
             border-radius: 10px 10px 0 0;
             overflow: hidden;
         }
@@ -372,7 +355,7 @@
         .tab-button {
             flex: 1;
             padding: 15px 20px;
-            background: #2C2C2C;
+            background: #2C3E50;
             border: none;
             cursor: pointer;
             font-size: 16px;
@@ -382,12 +365,12 @@
         }
 
         .tab-button.active {
-            background: #4A4A4A;
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
             color: #FFFFFF;
         }
 
         .tab-button:hover:not(.active) {
-            background: #3A3A3A;
+            background: #34495E;
         }
 
         .tab-content {
@@ -410,13 +393,13 @@
             align-items: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: #3A3A3A;
+            background: #34495E;
             border-radius: 10px;
         }
 
         .refresh-btn {
             padding: 10px 20px;
-            background: #4A4A4A;
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
             color: #FFFFFF;
             border: none;
             border-radius: 8px;
@@ -432,7 +415,7 @@
         }
 
         .summary-card {
-            background: #3A3A3A;
+            background: #34495E;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -473,7 +456,7 @@
         }
 
         .chart-container {
-            background: #3A3A3A;
+            background: #34495E;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
@@ -481,20 +464,20 @@
         }
 
         .chart-container h3 {
-            color: #FFFFFF;
+            color: #3498DB;
             margin-bottom: 15px;
             font-size: 1.2em;
         }
 
         .daily-stats {
-            background: #3A3A3A;
+            background: #34495E;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .daily-stats h3 {
-            color: #FFFFFF;
+            color: #3498DB;
             margin-bottom: 15px;
             font-size: 1.2em;
         }
@@ -551,10 +534,10 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: var(--sidebar-width);
+            width: 320px;
             height: 100vh;
-            background: #3A3A3A;
-            border-right: 1px solid #2C2C2C;
+            background: linear-gradient(180deg, #34495E 0%, #2C3E50 100%);
+            border-right: 1px solid #34495E;
             z-index: 1000;
             transition: transform 0.3s ease;
             display: flex;
@@ -700,7 +683,15 @@
             transform: translateY(-50%) scale(1.1);
         }
 
+        /* 调整主内容区域 */
+        .container {
+            margin-left: 320px;
+            transition: margin-left 0.3s ease;
+        }
 
+        .container.expanded {
+            margin-left: 0;
+        }
 
         /* 历史记录详情模态框 */
         .history-modal {
@@ -774,25 +765,21 @@
 
         /* 整个答题大块右边上方的统计信息 */
         .main-stats-overlay {
-            position: fixed;
-            top: var(--stats-margin);
-            right: var(--stats-margin);
+            position: absolute;
+            top: 10px;
+            right: 10px;
             z-index: 100;
-            width: var(--stats-width);
-            height: var(--stats-height);
+            max-width: 250px;
         }
 
         .main-stats-overlay .stats-card {
-            background: rgba(58, 58, 58, 0.95);
+            background: rgba(44, 62, 80, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             border-radius: 10px;
             padding: 15px;
             font-size: 0.85em;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
         }
 
         .main-stats-overlay .stats-card h3 {
@@ -835,7 +822,7 @@
             
             .chat-section {
                 border-right: none;
-                border-bottom: 1px solid #B8D4E3;
+                border-bottom: 1px solid #eee;
             }
             
             .controls {
@@ -858,7 +845,6 @@
 
             .container {
                 margin-left: 0;
-                width: 100%;
             }
 
             .sidebar-toggle-fixed {
@@ -870,13 +856,12 @@
                 position: relative;
                 top: auto;
                 right: auto;
-                width: 100%;
-                height: auto;
+                max-width: 100%;
                 margin-bottom: 15px;
             }
 
             .main-stats-overlay .stats-card {
-                background: #3A3A3A;
+                background: #34495E;
                 backdrop-filter: none;
             }
         }
@@ -945,19 +930,19 @@
                 
                 <!-- Chat Tab -->
                 <div id="chat-tab" class="tab-content active">
-                    <div class="controls">
-                        <div class="control-group">
-                            <label for="mode">Query Mode:</label>
-                            <select id="mode">
-                                <option value="best">🎯 Best Mode (Auto Select)</option>
-                                <option value="mix">Mix Mode (Mix)</option>
-                                <option value="naive">Naive Mode (Naive)</option>
-                                <option value="local">Local Mode (Local)</option>
-                                <option value="global">Global Mode (Global)</option>
-                                <option value="hybrid">Hybrid Mode (Hybrid)</option>
-                            </select>
-                        </div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="mode">Query Mode:</label>
+                        <select id="mode">
+                            <option value="best">🎯 Best Mode (Auto Select)</option>
+                            <option value="mix">Mix Mode (Mix)</option>
+                            <option value="naive">Naive Mode (Naive)</option>
+                            <option value="local">Local Mode (Local)</option>
+                            <option value="global">Global Mode (Global)</option>
+                            <option value="hybrid">Hybrid Mode (Hybrid)</option>
+                        </select>
                     </div>
+                </div>
                 
                 <div class="chat-container" id="chatContainer">
                     <div class="message bot-message">
@@ -983,7 +968,7 @@
 
                 <div id="responseInfo"></div>
             </div>
-                
+            
                 <!-- Token Stats Tab -->
                 <div id="token-stats-tab" class="tab-content">
                     <div class="token-stats-container">
@@ -995,9 +980,9 @@
                                     <option value="30">Last 30 Days</option>
                                     <option value="90">Last 90 Days</option>
                                 </select>
-                            </div>
+                    </div>
                             <button onclick="loadTokenStats()" class="refresh-btn">🔄 Refresh</button>
-                        </div>
+                    </div>
                         
                         <div class="token-summary">
                             <div class="summary-card">
@@ -1006,7 +991,7 @@
                                     <div class="summary-item">
                                         <span class="summary-label">Total Tokens:</span>
                                         <span class="summary-value" id="totalTokens">0</span>
-                                    </div>
+                    </div>
                                     <div class="summary-item">
                                         <span class="summary-label">Total Cost:</span>
                                         <span class="summary-value" id="totalTokenCost">$0.00</span>
@@ -1015,14 +1000,14 @@
                                         <span class="summary-label">Total Requests:</span>
                                         <span class="summary-value" id="totalRequests">0</span>
                                     </div>
-                                </div>
-                            </div>
-                            
+                    </div>
+                </div>
+                
                             <div class="summary-card">
                                 <h3>🤖 Model Usage</h3>
                                 <div id="modelUsage"></div>
-                            </div>
-                        </div>
+                </div>
+            </div>
                         
                         <div class="chart-container">
                             <h3>📊 Daily Token Usage</h3>
@@ -1421,12 +1406,12 @@
             
             if (sidebarCollapsed) {
                 sidebar.classList.add('collapsed');
-                container.classList.add('sidebar-collapsed');
+                container.classList.add('expanded');
                 toggleFixed.style.display = 'block';
                 toggleBtn.querySelector('.toggle-icon').textContent = '▶';
             } else {
                 sidebar.classList.remove('collapsed');
-                container.classList.remove('sidebar-collapsed');
+                container.classList.remove('expanded');
                 toggleFixed.style.display = 'none';
                 toggleBtn.querySelector('.toggle-icon').textContent = '◀';
             }
@@ -1454,11 +1439,6 @@
         function showHistoryDetail(timestamp) {
             const item = allHistoryData.find(h => h.timestamp === timestamp);
             if (item) {
-                // 自动隐藏侧边栏
-                if (!sidebarCollapsed) {
-                    toggleSidebar();
-                }
-                
                 const modal = document.getElementById('historyModal');
                 const content = document.getElementById('historyModalContent');
                 
@@ -1571,7 +1551,7 @@
                 const toggleBtn = document.getElementById('sidebarToggle');
                 
                 sidebar.classList.add('collapsed');
-                container.classList.add('sidebar-collapsed');
+                container.classList.add('expanded');
                 toggleFixed.style.display = 'block';
                 toggleBtn.querySelector('.toggle-icon').textContent = '▶';
             }

@@ -47,14 +47,9 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 250px;
             gap: 0;
             min-height: 600px;
-            transition: grid-template-columns 0.3s ease;
-        }
-
-        .main-content.sidebar-collapsed {
-            grid-template-columns: 1fr 0px;
         }
 
         .chat-section {
@@ -66,53 +61,6 @@
             background: #f8f9fa;
             padding: 20px;
             overflow-y: auto;
-            transition: all 0.3s ease;
-            position: relative;
-            width: 300px;
-            min-width: 300px;
-        }
-
-        .sidebar.collapsed {
-            padding: 10px;
-            min-width: 0px;
-            width: 0px;
-            overflow: hidden;
-        }
-
-        .sidebar-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-toggle:hover {
-            background: #5a6fd8;
-            transform: scale(1.1);
-        }
-
-        .sidebar-content {
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar.collapsed .sidebar-content {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .sidebar.collapsed .sidebar-toggle {
-            transform: rotate(180deg);
         }
 
         .chat-container {
@@ -392,10 +340,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .main-content.sidebar-collapsed {
-                grid-template-columns: 1fr;
-            }
-            
             .chat-section {
                 border-right: none;
                 border-bottom: 1px solid #eee;
@@ -403,21 +347,6 @@
             
             .controls {
                 flex-direction: column;
-            }
-            
-            .sidebar {
-                border-top: 1px solid #eee;
-                width: 100%;
-                min-width: 100%;
-            }
-            
-            .sidebar-toggle {
-                display: none;
-            }
-            
-            .sidebar-content {
-                opacity: 1 !important;
-                pointer-events: auto !important;
             }
         }
     </style>
@@ -470,33 +399,30 @@
                 <div id="responseInfo"></div>
             </div>
             
-            <div class="sidebar" id="sidebar">
-                <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">◀</button>
-                <div class="sidebar-content">
-                    <div class="stats-card">
-                        <h3>📊 Usage Statistics</h3>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Queries:</span>
-                            <span class="stat-value" id="totalQueries">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Input Tokens:</span>
-                            <span class="stat-value" id="totalInputTokens">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Output Tokens:</span>
-                            <span class="stat-value" id="totalOutputTokens">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Total Cost:</span>
-                            <span class="stat-value" id="totalCost">$0.00</span>
-                        </div>
+            <div class="sidebar">
+                <div class="stats-card">
+                    <h3>📊 Usage Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Queries:</span>
+                        <span class="stat-value" id="totalQueries">0</span>
                     </div>
-                    
-                    <div class="stats-card">
-                        <h3>📝 Query History</h3>
-                        <div id="queryHistory"></div>
+                    <div class="stat-item">
+                        <span class="stat-label">Input Tokens:</span>
+                        <span class="stat-value" id="totalInputTokens">0</span>
                     </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Output Tokens:</span>
+                        <span class="stat-value" id="totalOutputTokens">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Cost:</span>
+                        <span class="stat-value" id="totalCost">$0.00</span>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <h3>📝 Query History</h3>
+                    <div id="queryHistory"></div>
                 </div>
             </div>
         </div>
@@ -662,24 +588,6 @@
             const item = currentStats.query_history.find(h => h.timestamp === timestamp);
             if (item) {
                 alert(`Query Details:\n\nQuestion: ${item.question}\n\nAnswer: ${item.response}\n\nScore: ${item.score.toFixed(1)}/10\nCost: $${item.cost.toFixed(6)}`);
-            }
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const toggle = document.querySelector('.sidebar-toggle');
-            
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('sidebar-collapsed');
-            
-            // Update toggle button text
-            if (sidebar.classList.contains('collapsed')) {
-                toggle.textContent = '▶';
-                toggle.title = 'Expand Sidebar';
-            } else {
-                toggle.textContent = '◀';
-                toggle.title = 'Collapse Sidebar';
             }
         }
 
