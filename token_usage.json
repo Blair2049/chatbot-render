@@ -1,9 +1,9 @@
 {
   "total_usage": {
-    "prompt_tokens": 450,
-    "completion_tokens": 225,
-    "total_tokens": 675,
-    "estimated_cost": 0.00201
+    "prompt_tokens": 469,
+    "completion_tokens": 951,
+    "total_tokens": 1420,
+    "estimated_cost": 0.00244845
   },
   "daily_usage": {
     "2025-07-09": {
@@ -26,15 +26,22 @@
       "total_tokens": 225,
       "estimated_cost": 0.001875,
       "requests": 1
+    },
+    "2025-07-10": {
+      "prompt_tokens": 19,
+      "completion_tokens": 726,
+      "total_tokens": 745,
+      "estimated_cost": 0.0004384499999999999,
+      "requests": 4
     }
   },
   "model_usage": {
     "gpt-4o-mini": {
-      "prompt_tokens": 300,
-      "completion_tokens": 150,
-      "total_tokens": 450,
-      "estimated_cost": 0.00013499999999999997,
-      "requests": 2
+      "prompt_tokens": 319,
+      "completion_tokens": 876,
+      "total_tokens": 1195,
+      "estimated_cost": 0.00057345,
+      "requests": 6
     },
     "gpt-4o": {
       "prompt_tokens": 150,
@@ -44,5 +51,5 @@
       "requests": 1
     }
   },
-  "last_updated": "2025-07-09T15:52:42.498824"
+  "last_updated": "2025-07-10T20:21:32.921607"
 }

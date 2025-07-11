@@ -1,0 +1,75 @@
+2025-07-10 20:08:48,493 - lightrag - INFO - Logger initialized for working directory: ./stakeholder_management_rag_sync
+2025-07-10 20:08:48,572 - lightrag - INFO - Load KV llm_response_cache with 6 data
+2025-07-10 20:08:48,576 - lightrag - INFO - Load KV full_docs with 11 data
+2025-07-10 20:08:48,582 - lightrag - INFO - Load KV text_chunks with 346 data
+2025-07-10 20:08:48,653 - lightrag - INFO - Loaded graph from ./stakeholder_management_rag_sync/graph_chunk_entity_relation.graphml with 4403 nodes, 2986 edges
+2025-07-10 20:08:48,930 - lightrag - INFO - Loaded document status storage with 11 records
+2025-07-10 20:08:48,936 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,937 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,937 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,937 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,938 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,939 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,939 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,939 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,939 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,940 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:08:48,940 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,392 - lightrag - INFO - Logger initialized for working directory: ./stakeholder_management_rag_sync
+2025-07-10 20:11:13,464 - lightrag - INFO - Load KV llm_response_cache with 6 data
+2025-07-10 20:11:13,471 - lightrag - INFO - Load KV full_docs with 11 data
+2025-07-10 20:11:13,477 - lightrag - INFO - Load KV text_chunks with 346 data
+2025-07-10 20:11:13,541 - lightrag - INFO - Loaded graph from ./stakeholder_management_rag_sync/graph_chunk_entity_relation.graphml with 4403 nodes, 2986 edges
+2025-07-10 20:11:13,842 - lightrag - INFO - Loaded document status storage with 11 records
+2025-07-10 20:11:13,848 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,849 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,849 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,850 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,850 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,851 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,851 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,851 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,852 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,852 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:13,853 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:11:26,117 - lightrag - INFO - Creating a new event loop in main thread.
+2025-07-10 20:11:34,974 - lightrag - INFO - Creating a new event loop in main thread.
+2025-07-10 20:12:42,453 - lightrag - INFO - Creating a new event loop in main thread.
+2025-07-10 20:13:23,792 - lightrag - INFO - Creating a new event loop in main thread.
+2025-07-10 20:13:24,736 - lightrag - INFO - Truncate 10 to 3 chunks
+2025-07-10 20:13:24,777 - lightrag - ERROR - Error in get_kg_context: AsyncCompletions.create() got an unexpected keyword argument 'return_usage'
+2025-07-10 20:20:44,573 - lightrag - INFO - Logger initialized for working directory: ./stakeholder_management_rag_sync
+2025-07-10 20:20:44,655 - lightrag - INFO - Load KV llm_response_cache with 6 data
+2025-07-10 20:20:44,660 - lightrag - INFO - Load KV full_docs with 11 data
+2025-07-10 20:20:44,666 - lightrag - INFO - Load KV text_chunks with 346 data
+2025-07-10 20:20:44,728 - lightrag - INFO - Loaded graph from ./stakeholder_management_rag_sync/graph_chunk_entity_relation.graphml with 4403 nodes, 2986 edges
+2025-07-10 20:20:45,002 - lightrag - INFO - Loaded document status storage with 11 records
+2025-07-10 20:20:45,008 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,009 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,009 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,009 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,010 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,010 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,010 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,011 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,011 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,011 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:20:45,012 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:21:32,626 - lightrag - INFO - Creating a new event loop in main thread.
+2025-07-10 20:23:25,148 - lightrag - INFO - Logger initialized for working directory: ./stakeholder_management_rag_sync
+2025-07-10 20:23:25,219 - lightrag - INFO - Load KV llm_response_cache with 6 data
+2025-07-10 20:23:25,223 - lightrag - INFO - Load KV full_docs with 11 data
+2025-07-10 20:23:25,228 - lightrag - INFO - Load KV text_chunks with 346 data
+2025-07-10 20:23:25,292 - lightrag - INFO - Loaded graph from ./stakeholder_management_rag_sync/graph_chunk_entity_relation.graphml with 4403 nodes, 2986 edges
+2025-07-10 20:23:25,573 - lightrag - INFO - Loaded document status storage with 11 records
+2025-07-10 20:23:25,579 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,579 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,579 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,580 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,580 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,581 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,581 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,581 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,582 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,582 - lightrag - INFO - All documents have been processed or are duplicates
+2025-07-10 20:23:25,583 - lightrag - INFO - All documents have been processed or are duplicates
